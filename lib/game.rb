@@ -6,27 +6,6 @@ class Game
     @user_guesses = []
   end
 
-  def errors_made
-    return errors.length
-  end
-
-  def errors_allowed
-    TOTAL_ERRORS_ALLOWED - errors_made
-  end
-
-  def letters_to_guess
-    result =
-    normalized_letters.map do |letter|
-      if @user_guesses.include?(letter)
-        letter
-      else
-        nil
-      end
-  end
-
-    return result
-  end
-
   def normalize_letter(letter)
     if letter == "Й"
       "И"
@@ -43,6 +22,27 @@ class Game
     end
   end
 
+  def errors_made
+    return errors.length
+  end
+
+  def errors_allowed
+    TOTAL_ERRORS_ALLOWED - errors_made
+  end
+
+  def letters_to_guess
+    result =
+      @letters.map do |letter|
+        if @user_guesses.include?(normalize_letter(letter))
+          letter
+        else
+          nil
+        end
+      end
+
+    return result
+  end
+
   def errors
     return @user_guesses - normalized_letters
   end
@@ -52,7 +52,7 @@ class Game
   end
 
   def play!(letter)
-    if !over? && !@user_guesses.include?(letter)
+    if !over? && !@user_guesses.include?(normalize_letter(letter))
       @user_guesses << normalize_letter(letter)
     end
   end
